@@ -1,5 +1,5 @@
 "use client";
-
+import Popup from "../../components/popup/Popup";
 import styles from "./demo.module.css";
 import React, { useState } from "react";
 
@@ -12,7 +12,7 @@ const Demo = () => {
     smokingHistory: "0",
     bmi: "",
     hba1c: "",
-    bloodGlucose: ""
+    bloodGlucose: "",
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -23,8 +23,12 @@ const Demo = () => {
     smokingHistory: "",
     bmi: "",
     hba1c: "",
-    bloodGlucose: ""
+    bloodGlucose: "",
   });
+
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,9 +53,10 @@ const Demo = () => {
 
     for (const key in formValues) {
       if (formValues[key] === "" || Number(formValues[key]) < 0) {
-        errors[key] = formValues[key] === ""
-          ? `Please enter ${key.replace(/([A-Z])/g, " $1")}`
-          : "Please enter a valid input";
+        errors[key] =
+          formValues[key] === ""
+            ? `Please enter ${key.replace(/([A-Z])/g, " $1")}`
+            : "Please enter a valid input";
         valid = false;
       } else {
         errors[key] = "";
@@ -62,8 +67,11 @@ const Demo = () => {
 
     if (valid) {
       // Form is valid, show success message and log form values
-      alert("Successfully Submitted");
+      setPopupMessage("Submitted successfully!");
+      setIsSuccess(true);
+      setIsPopupVisible(true);
       console.log("Form submitted with values:", formValues);
+
       setFormValues({
         gender: "male",
         age: "",
@@ -72,22 +80,32 @@ const Demo = () => {
         smokingHistory: "0",
         bmi: "",
         hba1c: "",
-        bloodGlucose: ""
+        bloodGlucose: "",
       });
-
     } else {
+      setPopupMessage("Form has errors. Please fix them and try again.");
+      setIsSuccess(false);
+      setIsPopupVisible(false);
       console.log("Form has errors", errors);
     }
+  };
+
+  const closePopup = () => {
+    setIsPopupVisible(false);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.topContainer}>
         <h1>Need To Know ...</h1>
-        <form action="" className={styles.formContainer} onSubmit={handleSubmit}>
+        <form
+          action=""
+          className={styles.formContainer}
+          onSubmit={handleSubmit}
+        >
           <div className={styles.formItem}>
             <label className={styles.formLabel}>Gender :</label>
-            <select 
+            <select
               className={styles.formInputs}
               name="gender"
               value={formValues.gender}
@@ -104,17 +122,21 @@ const Demo = () => {
           <div className={styles.formItem}>
             <label className={styles.formLabel}>Age :</label>
             <input
-              className={`${styles.formInputs} ${formErrors.age ? styles.errorInput : ""}`}
+              className={`${styles.formInputs} ${
+                formErrors.age ? styles.errorInput : ""
+              }`}
               type="number"
               name="age"
               value={formValues.age}
               onChange={handleInputChange}
             />
-            {formErrors.age && <p className={styles.errorText}>{formErrors.age}</p>}
+            {formErrors.age && (
+              <p className={styles.errorText}>{formErrors.age}</p>
+            )}
           </div>
           <div className={styles.formItem}>
             <label className={styles.formLabel}>Hypertension :</label>
-            <select 
+            <select
               className={styles.formInputs}
               name="hypertension"
               value={formValues.hypertension}
@@ -131,17 +153,21 @@ const Demo = () => {
           <div className={styles.formItem}>
             <label className={styles.formLabel}>Heart Disease :</label>
             <input
-              className={`${styles.formInputs} ${formErrors.heartDisease ? styles.errorInput : ""}`}
+              className={`${styles.formInputs} ${
+                formErrors.heartDisease ? styles.errorInput : ""
+              }`}
               type="number"
               name="heartDisease"
               value={formValues.heartDisease}
               onChange={handleInputChange}
             />
-            {formErrors.heartDisease && <p className={styles.errorText}>{formErrors.heartDisease}</p>}
+            {formErrors.heartDisease && (
+              <p className={styles.errorText}>{formErrors.heartDisease}</p>
+            )}
           </div>
           <div className={styles.formItem}>
             <label className={styles.formLabel}>Smoking history :</label>
-            <select 
+            <select
               className={styles.formInputs}
               name="smokingHistory"
               value={formValues.smokingHistory}
@@ -157,40 +183,54 @@ const Demo = () => {
                 Former
               </option>
             </select>
-            {formErrors.smokingHistory && <p className={styles.errorText}>{formErrors.smokingHistory}</p>}
+            {formErrors.smokingHistory && (
+              <p className={styles.errorText}>{formErrors.smokingHistory}</p>
+            )}
           </div>
           <div className={styles.formItem}>
             <label className={styles.formLabel}>BMI :</label>
             <input
-              className={`${styles.formInputs} ${formErrors.bmi ? styles.errorInput : ""}`}
+              className={`${styles.formInputs} ${
+                formErrors.bmi ? styles.errorInput : ""
+              }`}
               type="number"
               name="bmi"
               value={formValues.bmi}
               onChange={handleInputChange}
             />
-            {formErrors.bmi && <p className={styles.errorText}>{formErrors.bmi}</p>}
+            {formErrors.bmi && (
+              <p className={styles.errorText}>{formErrors.bmi}</p>
+            )}
           </div>
           <div className={styles.formItem}>
             <label className={styles.formLabel}>HbA1c Level :</label>
             <input
-              className={`${styles.formInputs} ${formErrors.hba1c ? styles.errorInput : ""}`}
+              className={`${styles.formInputs} ${
+                formErrors.hba1c ? styles.errorInput : ""
+              }`}
               type="number"
               name="hba1c"
               value={formValues.hba1c}
               onChange={handleInputChange}
             />
-            {formErrors.hba1c && <p className={styles.errorText}>{formErrors.hba1c}</p>}
+            {formErrors.hba1c && (
+              <p className={styles.errorText}>{formErrors.hba1c}</p>
+            )}
           </div>
           <div className={styles.formItem}>
             <label className={styles.formLabel}>Blood Glucose Level :</label>
             <input
-              className={`${styles.formInputs} ${formErrors.bloodGlucose ? styles.errorInput : ""}`}
+              className={`${styles.formInputs} ${
+                formErrors.bloodGlucose ? styles.errorInput : ""
+              }`}
               type="number"
               name="bloodGlucose"
               value={formValues.bloodGlucose}
               onChange={handleInputChange}
             />
-            {formErrors.bloodGlucose && <p className={styles.errorText}>{formErrors.bloodGlucose}</p>}
+            {formErrors.bloodGlucose && (
+              <p className={styles.errorText}>{formErrors.bloodGlucose}</p>
+            )}
           </div>
           <div className={styles.submitColumn}>
             <button type="submit" className={styles.submitButton}>
@@ -201,6 +241,13 @@ const Demo = () => {
       </div>
 
       <div className={styles.secondContainer}></div>
+      {isPopupVisible && (
+        <Popup 
+          message={popupMessage} 
+          isSuccess={isSuccess} 
+          onClose={closePopup} 
+        />
+      )}
     </div>
   );
 };
