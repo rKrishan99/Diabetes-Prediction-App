@@ -1,9 +1,15 @@
 "use client";
-import Popup from "../../components/popup/Popup";
-import styles from "./demo.module.css";
+import { useRouter } from 'next/navigation';
 import React, { useState } from "react";
+import styles from "./demo.module.css";
+import Popup from "../../components/popup/Popup";
+import ResultsPage from '../results/page';
+
 
 const Demo = () => {
+
+  const router = useRouter();
+
   const [formValues, setFormValues] = useState({
     gender: "male",
     age: "",
@@ -46,7 +52,7 @@ const Demo = () => {
     setFormErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
     const errors = {};
@@ -66,27 +72,39 @@ const Demo = () => {
     setFormErrors(errors);
 
     if (valid) {
-      // Form is valid, show success message and log form values
-      setPopupMessage("Submitted successfully!");
-      setIsSuccess(true);
-      setIsPopupVisible(true);
-      console.log("Form submitted with values:", formValues);
-
-      setFormValues({
-        gender: "male",
-        age: "",
-        hypertension: "0",
-        heartDisease: "",
-        smokingHistory: "0",
-        bmi: "",
-        hba1c: "",
-        bloodGlucose: "",
-      });
+      // Make an API call to submit the form data
+      try {
+        const response = await fetch('/api/submit-form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formValues),
+          
+        });
+        if (response.ok) {
+          console.log(formValues);
+          setPopupMessage("Submitted successfully!");
+          setIsSuccess(true);
+          setIsPopupVisible(true);
+          
+          // Wait a moment before redirecting to the results page
+          setTimeout(() => {
+            router.push('/results');
+          }, 2000);
+        } else {
+          throw new Error('Failed to submit form');
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setPopupMessage("Submission failed. Please try again.");
+        setIsSuccess(false);
+        setIsPopupVisible(true);
+      }
     } else {
       setPopupMessage("Form has errors. Please fix them and try again.");
       setIsSuccess(false);
       setIsPopupVisible(false);
-      console.log("Form has errors", errors);
     }
   };
 
