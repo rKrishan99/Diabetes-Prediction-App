@@ -9,6 +9,7 @@ export default function Home() {
 
   return (
     <div className={styles.main}>
+      {/* Hero */}
       <div className={styles.topContainer}>
         <div className={styles.topContainerLeft}>
           <Image
@@ -51,6 +52,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Introduction */}
       <div className={styles.secondContainer}>
         <h1 className={styles.title_02}>Intoduction</h1>
 
@@ -89,6 +91,7 @@ export default function Home() {
         </p>
       </div>
 
+      {/* Features */}
       <div className={styles.thirdContainer}>
         <div className={styles.thirdContainerLeft}>
           <h1 className={styles.title_02}>Features</h1>
@@ -170,8 +173,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-
-      
     </div>
   );
 }
